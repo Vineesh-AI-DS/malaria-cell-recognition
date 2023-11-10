@@ -1,54 +1,9 @@
-# Deep Neural Network for Malaria Infected Cell Recognition
+#!/usr/bin/env python
+# coding: utf-8
 
-## AIM
-
-To develop a deep neural network for Malaria infected cell recognition and to analyze the performance.
-
-## Problem Statement and Dataset
-
-The problem at hand is the automatic classification of red blood cell images into two categories: parasitized and uninfected. Malaria-infected red blood cells, known as parasitized cells, contain the Plasmodium parasite, while uninfected cells are healthy and free from the parasite. The goal is to build a convolutional neural network (CNN) model capable of accurately distinguishing between these two classes based on cell images.
-
-Traditional methods of malaria diagnosis involve manual inspection of blood smears by trained professionals, which can be time-consuming and error-prone. Automating this process using deep learning can significantly speed up diagnosis, reduce the workload on healthcare professionals, and improve the accuracy of detection.
-
-Our dataset comprises 27,558 cell images, evenly split between parasitized and uninfected cells. These images have been meticulously collected and annotated by medical experts, making them a reliable source for training and testing our deep neural network.
-
-## Neural Network Model
-
-![op1](https://github.com/Senthil-Kumar-710/demo/assets/93860256/b0528ca1-b679-4864-bd57-9d6c07f0a1bf)
-
-## DESIGN STEPS
-
-### STEP 1:
-
-We begin by importing the necessary Python libraries, including TensorFlow for deep learning, data preprocessing tools, and visualization libraries.
-
-### STEP 2:
-
-To leverage the power of GPU acceleration, we configure TensorFlow to allow GPU processing, which can significantly speed up model training.
-
-### STEP 3:
-
-We create an image generator that performs data augmentation, including rotation, shifting, rescaling, and flipping. Data augmentation enhances the model's ability to generalize and recognize malaria-infected cells in various orientations and conditions.
-
-### STEP 4:
-
-We design a convolutional neural network (CNN) architecture consisting of convolutional layers, max-pooling layers, and fully connected layers. The model is compiled with appropriate loss and optimization functions.
-
-### STEP 5:
-
-We split the dataset into training and testing sets, and then train the CNN model using the training data. The model learns to differentiate between parasitized and uninfected cells during this phase.
-
-### STEP 6:
-
-We evaluate the trained model's performance using the testing data, generating a classification report and confusion matrix to assess accuracy and potential misclassifications.
-
-## PROGRAM
+# In[1]:
 
 
-## Developed by: Vineesh.M  
-## Reg No: 212221230122
-
-```
 import os
 import pandas as pd
 import numpy as np
@@ -71,20 +26,53 @@ config.log_device_placement = True # to log device placement (on which device th
 sess = tf.compat.v1.Session(config=config)
 set_session(sess)
 
-%matplotlib inline
+get_ipython().run_line_magic('matplotlib', 'inline')
+
+
+# In[2]:
+
 
 my_data_dir = 'dataset/cell_images'
+
+
+# In[3]:
+
+
 os.listdir(my_data_dir)
+
+
+# In[4]:
+
+
 test_path = my_data_dir+'/test/'
 train_path = my_data_dir+'/train/'
+
+
+# In[5]:
+
+
 os.listdir(train_path)
 print(len(os.listdir(train_path+'/uninfected/')))
 print(len(os.listdir(train_path+'/parasitized/')))
+
+
+# In[6]:
+
+
 para_img= imread(train_path+
                  '/parasitized/'+
                  os.listdir(train_path+'/parasitized')[0])
 
+
+# In[7]:
+
+
 plt.imshow(para_img)
+
+
+# In[8]:
+
+
 dim1 = []
 dim2 = []
 for image_filename in os.listdir(test_path+'/uninfected'):
@@ -93,10 +81,28 @@ for image_filename in os.listdir(test_path+'/uninfected'):
     dim1.append(d1)
     dim2.append(d2)
 
+
+# In[9]:
+
+
 print(dim1)
+
+
+# In[10]:
+
+
 sns.jointplot(x=dim1,y=dim2)
 
+
+# In[11]:
+
+
 image_shape = (130,130,3)
+help(ImageDataGenerator)
+
+
+# In[12]:
+
 
 image_gen = ImageDataGenerator(rotation_range=20, # rotate the image 20 degrees
                                width_shift_range=0.10, # Shift the pic width by a max of 5%
@@ -107,6 +113,23 @@ image_gen = ImageDataGenerator(rotation_range=20, # rotate the image 20 degrees
                                horizontal_flip=True, # Allo horizontal flipping
                                fill_mode='nearest' # Fill in missing pixels with the nearest filled value
                               )
+
+
+# In[13]:
+
+
+image_gen.flow_from_directory(train_path)
+
+
+# In[14]:
+
+
+image_gen.flow_from_directory(test_path)
+
+
+# In[22]:
+
+
 model = models.Sequential()
 model.add(keras.Input(shape=(image_shape)))
 model.add(layers.Conv2D(filters=32,kernel_size=(3,3),activation='relu',))
@@ -129,11 +152,24 @@ model.summary()
 
 batch_size = 16
 
+
+# In[23]:
+
+
 train_image_gen = image_gen.flow_from_directory(train_path,
                                                target_size=image_shape[:2],
                                                 color_mode='rgb',
                                                batch_size=batch_size,
                                                class_mode='binary')
+
+
+# In[24]:
+
+
+train_image_gen.total_batches_seen
+
+
+# In[25]:
 
 
 test_image_gen = image_gen.flow_from_directory(test_path,
@@ -142,10 +178,39 @@ test_image_gen = image_gen.flow_from_directory(test_path,
                                                batch_size=batch_size,
                                                class_mode='binary',shuffle=False)
 
+
+# In[ ]:
+
+
+
+
+
+# In[26]:
+
+
 results = model.fit(train_image_gen,epochs=2,validation_data=test_image_gen)
+
+
+# In[27]:
+
+
+model.save('cell_model.h5')
+
+
+# In[28]:
+
+
 losses = pd.DataFrame(model.history.history)
 
+
+# In[29]:
+
+
 losses[['loss','val_loss']].plot()
+
+
+# In[39]:
+
 
 import random
 import tensorflow as tf
@@ -162,7 +227,10 @@ pred=bool(model.predict(img.reshape(1,130,130,3))<0.5 )
 plt.title("Model prediction: "+("Parasitized" if pred  else "Un Infected")+"\nActual Value: "+str(dir_))
 plt.axis("off")
 plt.imshow(img)
-plt.show()
+plt.show()    
+
+
+# In[40]:
 
 
 model.evaluate(test_image_gen)
@@ -172,22 +240,9 @@ predictions = pred_probabilities > 0.5
 print(classification_report(test_image_gen.classes,predictions))
 confusion_matrix(test_image_gen.classes,predictions)
 
-```
 
-## OUTPUT
+# In[ ]:
 
-### Training Loss, Validation Loss Vs Iteration Plot
 
-![op2](https://github.com/Senthil-Kumar-710/demo/assets/93860256/2ffb9464-435f-4bec-b33b-d113075d13c6)
 
-### Classification Report and Confusion Matrix
 
-![op3](https://github.com/Senthil-Kumar-710/demo/assets/93860256/9967f76e-d3a5-4276-9c05-2c36496cabb2)
-
-### New Sample Data Prediction
-
-![op4](https://github.com/Senthil-Kumar-710/demo/assets/93860256/99c3b322-fdc4-4a05-8e5c-c27c3d100545)
-
-## RESULT
-
-Thus a deep neural network for Malaria infected cell recognition and to analyze the performance is created using tensorflow.
