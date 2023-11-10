@@ -14,7 +14,8 @@ Our dataset comprises 27,558 cell images, evenly split between parasitized and u
 
 ## Neural Network Model
 
-![op1](https://github.com/Senthil-Kumar-710/demo/assets/93860256/b0528ca1-b679-4864-bd57-9d6c07f0a1bf)
+![image](https://github.com/Vineesh-AI-DS/malaria-cell-recognition/assets/93427254/20a4ebe6-418b-41c8-bbe6-d0c01e4530e2)
+
 
 ## DESIGN STEPS
 
@@ -178,15 +179,17 @@ confusion_matrix(test_image_gen.classes,predictions)
 
 ### Training Loss, Validation Loss Vs Iteration Plot
 
-![op2](https://github.com/Senthil-Kumar-710/demo/assets/93860256/2ffb9464-435f-4bec-b33b-d113075d13c6)
+![image](https://github.com/Vineesh-AI-DS/malaria-cell-recognition/assets/93427254/89df49e1-94cd-46d8-8f39-4c9fc5904bf7)
+
 
 ### Classification Report and Confusion Matrix
 
-![op3](https://github.com/Senthil-Kumar-710/demo/assets/93860256/9967f76e-d3a5-4276-9c05-2c36496cabb2)
+![image](https://github.com/Vineesh-AI-DS/malaria-cell-recognition/assets/93427254/751f9589-d219-4d5a-8878-5d5b1cb962cb)
 
 ### New Sample Data Prediction
 
-![op4](https://github.com/Senthil-Kumar-710/demo/assets/93860256/99c3b322-fdc4-4a05-8e5c-c27c3d100545)
+![image](https://github.com/Vineesh-AI-DS/malaria-cell-recognition/assets/93427254/8c29ebf0-11fa-4663-a9cc-702ad69e1ad2)
+
 
 ## RESULT
 
