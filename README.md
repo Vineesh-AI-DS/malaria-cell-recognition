@@ -44,10 +44,10 @@ We split the dataset into training and testing sets, and then train the CNN mode
 We evaluate the trained model's performance using the testing data, generating a classification report and confusion matrix to assess accuracy and potential misclassifications.
 
 ## PROGRAM
-
-
-## Developed by: Vineesh.M  
-## Reg No: 212221230122
+```
+### Developed by: Vineesh.M  
+### Reg No: 212221230122
+```
 
 ```
 import os
